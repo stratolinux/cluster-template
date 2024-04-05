@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+env:
+  # Binaries
+  AP: ansible-playbook
+  AG: ansible-galaxy
+  AV: ansible-vault
+
+tasks:
+  default:
+    cmds:
+      - task -l
+    silent: true
+
+  encrypt:
+    desc: Encrypt Ansible Vault
+    dir: "{{.TASKFILE_DIR}}"
+    cmds: 
+      - cd ansible && {{.AV}} encrypt vars/ansible_vault.yaml
+    env:
+      ANSIBLE_CONFIG: ./ansible.cfg
+
+  decrypt:
+    desc: Decrypt Ansible Vault
+    dir: "{{.TASKFILE_DIR}}"
+    cmds: 
+
+      - cd ansible && {{.AV}} decrypt vars/ansible_vault.yaml
+    env:
+      ANSIBLE_CONFIG: ./ansible.cfg
+
+  setup:
+    desc: Setup an environment
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - "bash ./setup.sh"
+    
+  destroy:
+    desc: Destroys an environment
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - "bash ./destroy.sh"

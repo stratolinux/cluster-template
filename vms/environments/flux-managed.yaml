@@ -1,0 +1,34 @@
+
+cluster:
+  workspace: flux-managed
+  datacenter: aceshome
+  cluster: aceshome
+  datastore: vsanDatastore
+  vapp: Kubernetes-Production
+  folder: Kubernetes
+  resourcepool: Resources
+
+  # node configuration
+  masters:
+    prefix: "flux-managed-master"
+    memory: "4096"
+    cpu: "2"
+    extra_disks: []
+    ips:
+      - "192.168.2.81"
+      - "192.168.2.82"
+      - "192.168.2.83"
+    gateway: "192.168.2.1"
+  workers:
+    prefix: "flux-managed-worker"
+    memory: "16384"
+    cpu: "8"
+    extra_disks:
+      - "200"
+      - "200"
+    ips:
+      - "192.168.2.84"
+      - "192.168.2.85"
+      - "192.168.2.86"
+    gateway: "192.168.2.1"
+

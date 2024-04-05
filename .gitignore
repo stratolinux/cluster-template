@@ -24,3 +24,10 @@ Brewfile.lock.json
 wiki
 # Bootstrap
 /config.yaml
+
+# my changes
+vms/inventory
+vms/terraform/terraform.tfstate
+vms/terraform/terraform.tfstate.backup
+vms/terraform/.terraform
+vms/terraform/.terraform.lock.hcl

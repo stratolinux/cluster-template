@@ -1,0 +1,70 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - '*'
+  release:
+    types:
+      - published
+
+jobs:
+  changes:
+    name: Detect file changes
+    runs-on: ubuntu-22.04
+    outputs:
+      scenario: ${{ steps.filter.outputs.changes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+      - name: Detect changes
+        uses: dorny/paths-filter@v3.0.2
+        id: filter
+        with:
+          filters: |
+            default:
+              - roles/server/**/!(**.md)
+              - molecule/default/**
+              - .github/workflows/test.yml
+  test:
+    name: "Test scenario ${{ matrix.scenario }} on ${{ matrix.os }}"
+    runs-on: ubuntu-22.04
+    needs: changes
+    if: ${{ needs.changes.outputs.scenario != '[]' && needs.changes.outputs.scenario != '' }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu2204
+          - ubuntu2004
+          - debian12
+          - debian11
+          - fedora37
+          - fedora38
+          - rockylinux8
+          - rockylinux9
+        scenario: ${{ fromJSON(needs.changes.outputs.scenario) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          path: ansible_collections/vladgh/samba
+      - name: Molecule test
+        uses: gofrolist/molecule-action@v2.7.13
+        with:
+          molecule_command: test
+          molecule_options: --debug
+          molecule_args: --scenario-name ${{ matrix.scenario }}
+          molecule_working_dir: ansible_collections/vladgh/samba
+        env:
+          PY_COLORS: 1
+          ANSIBLE_FORCE_COLOR: 1
+          MOLECULE_DISTRO: ${{ matrix.os }}
+      #   continue-on-error: true
+      # - name: Debugging with tmate
+      #   uses: mxschmitt/action-tmate@v3.11

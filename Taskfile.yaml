@@ -39,6 +39,7 @@ includes:
   user:
     taskfile: .taskfiles/User
     optional: true
+  vms: vms/Taskfile.yaml
 
 tasks:
 

@@ -1,0 +1,27 @@
+---
+- name: Destroy infrastructure with Terraform
+  hosts: localhost
+  vars_files:
+    - "vars/ansible_vault.yaml"
+  vars:
+    terraform_dir: ../terraform
+
+  tasks:
+    - name: Warning
+      ansible.builtin.debug:
+        msg: "Attempting to delete nodes. An error may appear if no nodes exist"
+
+    - name: Destroy instances with Terraform
+      community.general.terraform:
+        project_path: "{{ terraform_dir }}"
+        state: absent
+        complex_vars: true
+        force_init: true
+        init_reconfigure: true
+        purge_workspace: true
+        variables:
+          provider_vsphere_host: "{{ vcenter_host }}"
+          provider_vsphere_user: "{{ vcenter_user }}"
+          provider_vsphere_password: "{{ vcenter_password }}"
+          cluster_nodes: "{{ cluster }}"
+      register: output

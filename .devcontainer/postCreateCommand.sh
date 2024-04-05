@@ -2,6 +2,8 @@
 set -e
 set -o noglob
 
+apk add sshpass
+
 # Setup fisher plugin manager for fish and install plugins
 /usr/bin/fish -c "
 curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher

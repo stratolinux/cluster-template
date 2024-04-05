@@ -1,0 +1,16 @@
+---
+- name: Setup system to run terraform
+  hosts: localhost
+  vars_files:
+    - "vars/ansible_vault.yaml"
+  vars:
+    terraform_dir: ../terraform
+
+  tasks:
+    - name: Install roles
+      community.general.ansible_galaxy_install:
+        type: role
+        name: "{{ item }}"
+      loop:
+        - diodonfrost.terraform
+        - ypsman.ipv6_disable

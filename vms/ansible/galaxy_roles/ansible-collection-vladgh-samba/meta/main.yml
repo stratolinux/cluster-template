@@ -1,0 +1,30 @@
+---
+galaxy_info:
+  author: Vlad Ghinea and Bert Van Vreckem
+  description: This role installs and configures Samba as a file server.
+  license: BSD
+  min_ansible_version: '2.11'
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+        - focal
+    - name: Debian
+      versions:
+        - bookworm
+        - bullseye
+    - name: Fedora
+      versions:
+        - '38'
+        - '37'
+    - name: EL
+      versions:
+        - '9'
+        - '8'
+    - name: ArchLinux
+      versions:
+        - all
+  galaxy_tags:
+    - system
+    - networking
+dependencies: []

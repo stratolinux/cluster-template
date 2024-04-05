@@ -1,0 +1,39 @@
+[all]
+# master nodes
+%{ for index, dns in master_ip ~}
+${replace(format("%s-%s", master_prefix, dns), ".", "-")} ansible_ssh_host=${dns}
+%{ endfor ~}
+# worker nodes
+%{ for index, dns in worker_ip ~}
+${replace(format("%s-%s", worker_prefix, dns), ".", "-")} ansible_ssh_host=${dns}
+%{ endfor ~}
+
+# variables common to all the nodes
+[all:vars]
+ansible_ssh_user=root
+ansible_ssh_private_key_file="${ssh_key}"
+ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+
+# Control plane nodes
+[kube_control_plane]
+%{ for index, dns in master_ip ~}
+${replace(format("%s-%s", master_prefix, dns), ".", "-")}
+%{ endfor ~}
+
+# where to put etcd, on the master nodes
+[etcd]
+%{ for index, dns in master_ip ~}
+${replace(format("%s-%s", master_prefix, dns), ".", "-")}
+%{ endfor ~}
+
+# worker nodes
+[kube_node]
+%{ for index, dns in worker_ip ~}
+${replace(format("%s-%s", worker_prefix, dns), ".", "-")}
+%{ endfor ~}
+
+# role that instructs Kubespray as to what nodes to use
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+

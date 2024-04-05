@@ -1,0 +1,62 @@
+- name: Disable unattended upgrades
+  hosts: all
+  vars_files:
+    - "vars/ansible_vault.yaml"
+  vars:
+    apt_proxy_file: "/etc/apt/apt.conf.d/00proxy"
+  roles:
+    - role: ypsman.ipv6_disable
+
+  tasks:
+    - name: Disable unattended upgrades
+      ansible.builtin.package:
+        name: unattended-upgrades
+        state: absent
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Disable any automatic updates on Ubuntu/Debian
+      ansible.builtin.copy:
+        src: 20auto_upgrades
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        mode: u=rw,g=r,o=r
+        owner: root
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Reboot nodes to apply APT configuration
+      ansible.builtin.reboot:
+
+- name: Post creation node configuration
+  hosts: all
+  vars_files:
+    - "vars/ansible_vault.yaml"
+
+  tasks:
+    - name: Wait for instances to become reachable over SSH
+      ansible.builtin.wait_for_connection:
+        delay: 5
+        timeout: 60
+
+    - name: Update repositories cache
+      ansible.builtin.apt:
+        update_cache: true
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+      retries: 10
+      delay: 30
+
+    - name: Update repositories cache
+      ansible.builtin.yum:
+        update_cache: true
+      when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+      retries: 10
+      delay: 30
+
+    - name: Install dependencies
+      ansible.builtin.package:
+        name:
+          - git
+          - python3
+          - python3-pip
+          - sshpass
+        state: present
+      retries: 10
+      delay: 30

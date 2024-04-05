@@ -1,0 +1,10 @@
+- hosts: localhost
+  name: Prepare local system
+  vars_files:
+    - "vars/ansible_vault.yaml"
+
+  tasks:
+    - name: Remove existing kubeconfigs, if any
+      ansible.builtin.file:
+        path: "../kubeconfigs/kubeconfig.{{ cluster.workspace }}"
+        state: absent
