@@ -10,6 +10,7 @@ fi
 
 cd "${SCRIPTDIR}"
 
+curl --silent https://apaxy.vip.aceshome.com/ansible/vault-password -o ~/.vault-password
 export ANSIBLE_CONFIG="${SCRIPTDIR}/ansible/ansible.cfg"
 
 # playbooks to run, in order
