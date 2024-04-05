@@ -2,7 +2,7 @@
 set -e
 set -o noglob
 
-apk add sshpass
+sudo apk add ansible sshpass
 
 # Setup fisher plugin manager for fish and install plugins
 /usr/bin/fish -c "

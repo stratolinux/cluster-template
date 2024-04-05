@@ -1,0 +1,25 @@
+---
+kubernetes:
+  children:
+    controllers:
+      hosts:
+        "flux-managed-master-192.168.2.81":
+          ansible_user: "root"
+          ansible_host: "192.168.2.81"
+        "flux-managed-master-192.168.2.82":
+          ansible_user: "root"
+          ansible_host: "192.168.2.82"
+        "flux-managed-master-192.168.2.83":
+          ansible_user: "root"
+          ansible_host: "192.168.2.83"
+    workers:
+      hosts:
+        "flux-managed-worker-192.168.2.84":
+          ansible_user: "root"
+          ansible_host: "192.168.2.84"
+        "flux-managed-worker-192.168.2.85":
+          ansible_user: "root"
+          ansible_host: "192.168.2.85"
+        "flux-managed-worker-192.168.2.86":
+          ansible_user: "root"
+          ansible_host: "192.168.2.86"
